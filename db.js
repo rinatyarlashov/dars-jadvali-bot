@@ -1,26 +1,15 @@
-const fs = require("fs");
-const path = require("path");
-const Database = require("better-sqlite3");
+const Database = require('better-sqlite3');
+const fs = require('fs');
 
-const db = new Database("database.db");
+function openDb(path) {
+  const db = new Database(path);
 
-function initDb() {
-
-  // init.sql ni to‘g‘ri topish uchun
-  const initPath = path.join(__dirname, "init.sql");
-
-  console.log("SQL path:", initPath);
-
-  if (!fs.existsSync(initPath)) {
-    console.error("init.sql topilmadi!");
-    return;
+  if (fs.existsSync('./init.sql')) {
+    const initSql = fs.readFileSync('./init.sql', 'utf8');
+    db.exec(initSql);
   }
 
-  const sql = fs.readFileSync(initPath, "utf8");
-
-  db.exec(sql);
-
-  console.log("Database initialized");
+  return db;
 }
 
-module.exports = { db, initDb };
+module.exports = { openDb };
