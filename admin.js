@@ -1,8 +1,9 @@
 const { inlineKeyboardFromButtons, WEEKDAYS } = require('./keyboards');
 
-function isAdmin(ctx, adminIds) {
-  const id = ctx.from?.id;
-  return id && adminIds.includes(String(id));
+function isAdmin(ctx, ADMIN_IDS) {
+  const id = Number(ctx.from?.id);
+  const admins = (ADMIN_IDS || []).map(Number);
+  return admins.includes(id);
 }
 
 function adminMenu() {
