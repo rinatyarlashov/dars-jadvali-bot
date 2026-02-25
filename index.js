@@ -28,8 +28,8 @@ if (!BOT_TOKEN) throw new Error('BOT_TOKEN yo‘q (.env ni tekshiring)');
 
 const ADMIN_IDS = (process.env.ADMIN_IDS || '')
   .split(',')
-  .map((s) => s.trim())
-  .filter(Boolean);
+  .map(s => Number(s.trim()))
+  .filter(n => Number.isFinite(n));
 
 const DB_PATH = process.env.DB_PATH || './data.db';
 
