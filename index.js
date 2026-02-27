@@ -871,7 +871,38 @@ bot.on('text', async (ctx) => {
 // =====================
 // LAUNCH
 // =====================
-bot.launch();
+// =====================
+// WEBHOOK (Railway uchun)
+// =====================
+const express = require('express');
+
+const app = express();
+app.use(express.json());
+
+const PORT = process.env.PORT || 8080;
+
+// Railway "service is up" tekshirishi uchun
+app.get('/', (req, res) => res.send('✅ Bot ishlayapti'));
+
+// Telegram webhook endpoint
+app.post('/telegram', (req, res) => {
+  bot.handleUpdate(req.body);
+  res.sendStatus(200);
+});
+
+app.listen(PORT, async () => {
+  console.log('✅ Server port:', PORT);
+
+  if (!process.env.WEBHOOK_URL) {
+    console.log('❌ WEBHOOK_URL yo‘q. Railway Variables ga qo‘shing.');
+    return;
+  }
+
+  const webhookUrl = `${process.env.WEBHOOK_URL}/telegram`;
+
+  await bot.telegram.setWebhook(webhookUrl);
+  console.log('✅ Webhook o‘rnatildi:', webhookUrl);
+});
+
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
-console.log('✅ Bot ishga tushdi');
