@@ -908,31 +908,8 @@ process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
 console.log('✅ Bot ishga tushdi');
 
-const express = require('express');
 
-const app = express();
 
-app.use(express.json());
 
-const PORT = process.env.PORT || 8080;
 
-app.get('/', (req, res) => {
-  res.send('Bot ishlayapti');
-});
-
-// webhook route
-app.post(`/bot${process.env.BOT_TOKEN}`, (req, res) => {
-  bot.handleUpdate(req.body);
-  res.sendStatus(200);
-});
-
-app.listen(PORT, async () => {
-  console.log('Server port:', PORT);
-
-  const webhookUrl = `${process.env.WEBHOOK_URL}/bot${process.env.BOT_TOKEN}`;
-
-  await bot.telegram.setWebhook(webhookUrl);
-
-  console.log('Webhook o‘rnatildi:', webhookUrl);
-});
 
